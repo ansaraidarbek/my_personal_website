@@ -1,0 +1,543 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+html,
+body,
+#root {
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+	background: var(--background);
+	color: var(--foreground);
+	font: var(--text-body);
+	letter-spacing: var(--tracking-body);
+	-webkit-font-smoothing: antialiased;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+/* Links read as foreground by default (matches the design); accent on hover. */
+a {
+	color: var(--foreground);
+	text-decoration: none;
+}
+a:hover {
+	color: var(--primary);
+}
+
+::selection {
+	background: color-mix(in oklab, var(--primary) 30%, transparent);
+}
+
+/* Every enabled interactive control reads as clickable. */
+button:not(:disabled),
+[role="tab"]:not([disabled]),
+[role="menuitem"],
+[role="option"],
+[role="combobox"]:not([disabled]),
+input[type="color"],
+input[type="radio"],
+input[type="checkbox"],
+label:has(> input[type="radio"]),
+label:has(> input[type="checkbox"]) {
+	cursor: pointer;
+}
+
+:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px var(--ring);
+}
+
+@theme inline {
+	--font-heading: var(--font-sans);
+	--font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+	--font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+	--color-surface: var(--glass-bg);
+	--color-surface-2: var(--glass-bg-subtle);
+	--color-rail: var(--glass-bg-strong);
+	--color-ring: var(--ring);
+	--color-input: var(--input);
+	--color-border: var(--border);
+	--color-destructive: var(--destructive);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-accent: var(--accent);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-muted: var(--muted);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-secondary: var(--secondary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-primary: var(--primary);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-popover: var(--popover);
+	--color-card-foreground: var(--card-foreground);
+	--color-card: var(--card);
+	--color-foreground: var(--foreground);
+	--color-background: var(--background);
+	--color-success: var(--success);
+	--color-warning: var(--warning);
+	--radius-sm: var(--radius-sm);
+	--radius-md: var(--radius-md);
+	--radius-lg: var(--radius-lg);
+	--radius-xl: var(--radius-xl);
+}
+
+/* ============================================================
+   815fbaa3 design system — "Glasscn". oklch color derived from a
+   single --accent-hue (275 violet). Names match shadcn/ui so any
+   primitive inherits them. Dark theme is the `.dark` class on
+   <html> (driven by @/shared/hooks/useTheme).
+   ============================================================ */
+:root {
+	/* base — the single knob everything else derives from.
+	   Light mode runs azure (cool blue over crisp paper) — deliberately
+	   distinct from support_desk's terracotta. Dark mode overrides the
+	   knob back to violet below. Other tested hues: 160 jade · 25 ember. */
+	--accent-hue: 215;
+	--accent-hue-secondary: calc(var(--accent-hue) - 90);
+	--accent-hue-tertiary: calc(var(--accent-hue) + 60);
+
+	/* semantic surfaces + text */
+	--background: oklch(0.968 0.010 var(--accent-hue));
+	--foreground: oklch(0.205 0.022 var(--accent-hue));
+	--card: oklch(1 0 0 / 0.55);
+	--card-foreground: oklch(0.205 0.022 var(--accent-hue));
+	--popover: oklch(1 0 0 / 0.72);
+	--popover-foreground: oklch(0.205 0.022 var(--accent-hue));
+	--muted: oklch(1 0 0 / 0.35);
+	--muted-foreground: oklch(0.500 0.025 var(--accent-hue));
+	--secondary: oklch(1 0 0 / 0.45);
+	--secondary-foreground: oklch(0.280 0.030 var(--accent-hue));
+
+	/* actions */
+	--primary: oklch(0.560 0.190 var(--accent-hue));
+	--primary-foreground: oklch(0.995 0 0);
+	--accent: oklch(0.640 0.150 var(--accent-hue-secondary));
+	--accent-foreground: oklch(0.180 0.030 var(--accent-hue));
+
+	/* status */
+	--destructive: oklch(0.585 0.210 25);
+	--destructive-foreground: oklch(0.995 0 0);
+	--success: oklch(0.620 0.150 155);
+	--warning: oklch(0.700 0.150 75);
+
+	/* lines + fields */
+	--border: oklch(0.300 0.030 var(--accent-hue) / 0.14);
+	--input: oklch(1 0 0 / 0.50);
+	--ring: oklch(0.560 0.190 var(--accent-hue) / 0.42);
+	--skeleton: color-mix(in oklab, var(--foreground) 11%, transparent);
+
+	/* backdrop blobs — chroma capped so text over them keeps AA */
+	--backdrop-1: oklch(0.85 0.14 var(--accent-hue));
+	--backdrop-2: oklch(0.88 0.12 var(--accent-hue-secondary));
+	--backdrop-3: oklch(0.90 0.10 var(--accent-hue-tertiary));
+
+	/* charts (shadcn compat) */
+	--chart-1: oklch(0.560 0.190 var(--accent-hue));
+	--chart-2: oklch(0.640 0.150 var(--accent-hue-secondary));
+	--chart-3: oklch(0.700 0.120 var(--accent-hue-tertiary));
+	--chart-4: oklch(0.620 0.150 155);
+	--chart-5: oklch(0.700 0.150 75);
+
+	/* --- typography ---------------------------------------- */
+	--text-display: 600 52px/1.04 var(--font-sans);
+	--text-title: 600 28px/1.15 var(--font-sans);
+	--text-heading: 600 17px/1.35 var(--font-sans);
+	--text-subheading: 600 15px/1.4 var(--font-sans);
+	--text-body: 400 14px/1.55 var(--font-sans);
+	--text-body-sm: 400 13px/1.55 var(--font-sans);
+	--text-label: 500 13px/1.3 var(--font-sans);
+	--text-caption: 500 12px/1.4 var(--font-sans);
+	--text-micro: 550 11.5px/1.3 var(--font-sans);
+	--text-code: 400 13px/1.6 var(--font-mono);
+	--text-code-sm: 400 11px/1.4 var(--font-mono);
+	--text-eyebrow: 600 12px/1.2 var(--font-sans);
+	--tracking-eyebrow: 0.1em;
+	--tracking-display: -0.035em;
+	--tracking-title: -0.028em;
+	--tracking-heading: -0.016em;
+	--tracking-body: -0.006em;
+
+	/* --- spacing + radius ---------------------------------- */
+	--radius: 0.5rem;
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+	--radius-glass: calc(var(--radius) + 6px);
+	--radius-full: 999px;
+	--control-sm: 32px;
+	--control-md: 38px;
+	--control-lg: 46px;
+	--max-content: 1080px;
+
+	/* --- motion -------------------------------------------- */
+	--ease-glass: cubic-bezier(0.22, 1, 0.36, 1);
+	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+	--duration-fast: 140ms;
+	--duration-hover: 180ms;
+	--duration-base: 220ms;
+	--duration-panel: 280ms;
+	--duration-sheet: 300ms;
+	--duration-sheen: 750ms;
+	--duration-drift: 26s;
+	--lift-control: -1px;
+	--lift-card: -3px;
+	--press-scale: 0.985;
+
+	/* --- glass --------------------------------------------- */
+	--blur-glass-xs: 6px;
+	--blur-glass-sm: 10px;
+	--blur-glass: 16px;
+	--blur-glass-lg: 26px;
+	--blur-glass-xl: 40px;
+	--glass-saturate: 180%;
+
+	--glass-bg: oklch(1 0 0 / 0.55);
+	--glass-bg-strong: oklch(1 0 0 / 0.74);
+	--glass-bg-subtle: oklch(1 0 0 / 0.34);
+	/* dense: for chrome floating over running text (header, toasts) —
+	   nearly opaque so content behind can never fight the label. */
+	--glass-bg-dense: oklch(0.99 0.003 var(--accent-hue) / 0.94);
+	--glass-border: oklch(1 0 0 / 0.75);
+	--glass-hairline: oklch(1 0 0 / 0.90);
+	--glass-sheen: oklch(1 0 0 / 0.55);
+
+	--glass-shadow:
+		0 1px 1px oklch(0.2 0.03 var(--accent-hue) / 0.04),
+		0 8px 24px -6px oklch(0.2 0.03 var(--accent-hue) / 0.12),
+		inset 0 1px 0 0 var(--glass-hairline);
+	--glass-shadow-lg:
+		0 2px 4px oklch(0.2 0.03 var(--accent-hue) / 0.05),
+		0 24px 60px -12px oklch(0.2 0.03 var(--accent-hue) / 0.22),
+		inset 0 1px 0 0 var(--glass-hairline);
+
+	--glow-primary: 0 2px 10px -2px color-mix(in oklab, var(--primary) 50%, transparent),
+		inset 0 1px 0 0 oklch(1 0 0 / 0.24);
+	--glow-primary-hover: 0 6px 20px -4px color-mix(in oklab, var(--primary) 55%, transparent),
+		inset 0 1px 0 0 oklch(1 0 0 / 0.28);
+}
+
+.dark {
+	--accent-hue: 275;
+	--background: oklch(0.165 0.022 var(--accent-hue));
+	--foreground: oklch(0.965 0.008 var(--accent-hue));
+	--card: oklch(1 0 0 / 0.06);
+	--card-foreground: oklch(0.965 0.008 var(--accent-hue));
+	--popover: oklch(0.22 0.025 var(--accent-hue) / 0.82);
+	--popover-foreground: oklch(0.965 0.008 var(--accent-hue));
+	--muted: oklch(1 0 0 / 0.06);
+	--muted-foreground: oklch(0.715 0.020 var(--accent-hue));
+	--secondary: oklch(1 0 0 / 0.10);
+	--secondary-foreground: oklch(0.950 0.010 var(--accent-hue));
+
+	--primary: oklch(0.680 0.180 var(--accent-hue));
+	--primary-foreground: oklch(0.155 0.030 var(--accent-hue));
+	--accent: oklch(0.760 0.140 var(--accent-hue-secondary));
+	--accent-foreground: oklch(0.155 0.030 var(--accent-hue));
+
+	--destructive: oklch(0.660 0.200 25);
+	--destructive-foreground: oklch(0.150 0.040 25);
+	--success: oklch(0.740 0.150 155);
+	--warning: oklch(0.820 0.150 75);
+
+	--border: oklch(1 0 0 / 0.12);
+	--input: oklch(1 0 0 / 0.08);
+	--ring: oklch(0.680 0.180 var(--accent-hue) / 0.55);
+	--skeleton: color-mix(in oklab, var(--foreground) 16%, transparent);
+
+	--backdrop-1: oklch(0.52 0.20 var(--accent-hue));
+	--backdrop-2: oklch(0.48 0.17 var(--accent-hue-secondary));
+	--backdrop-3: oklch(0.44 0.15 var(--accent-hue-tertiary));
+
+	--chart-1: oklch(0.680 0.180 var(--accent-hue));
+	--chart-2: oklch(0.760 0.140 var(--accent-hue-secondary));
+	--chart-3: oklch(0.780 0.120 var(--accent-hue-tertiary));
+	--chart-4: oklch(0.740 0.150 155);
+	--chart-5: oklch(0.820 0.150 75);
+
+	--glass-bg: oklch(1 0 0 / 0.065);
+	--glass-bg-strong: oklch(1 0 0 / 0.115);
+	--glass-bg-subtle: oklch(1 0 0 / 0.035);
+	--glass-bg-dense: oklch(0.21 0.024 var(--accent-hue) / 0.95);
+	--glass-border: oklch(1 0 0 / 0.14);
+	--glass-hairline: oklch(1 0 0 / 0.16);
+	--glass-sheen: oklch(1 0 0 / 0.14);
+
+	--glass-shadow:
+		0 1px 1px oklch(0 0 0 / 0.30),
+		0 8px 28px -8px oklch(0 0 0 / 0.55),
+		inset 0 1px 0 0 var(--glass-hairline);
+	--glass-shadow-lg:
+		0 2px 6px oklch(0 0 0 / 0.35),
+		0 28px 70px -14px oklch(0 0 0 / 0.70),
+		inset 0 1px 0 0 var(--glass-hairline);
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+	html {
+		@apply font-sans;
+	}
+}
+
+/* ============================================================
+   Glass surfaces — three tiers. The inset top hairline is what
+   makes a pane read as a physical sheet; never stack more than
+   two glass layers.
+   ============================================================ */
+@layer components {
+	.glass {
+		background: var(--glass-bg);
+		backdrop-filter: blur(var(--blur-glass)) saturate(var(--glass-saturate));
+		-webkit-backdrop-filter: blur(var(--blur-glass)) saturate(var(--glass-saturate));
+		border: 1px solid var(--glass-border);
+		box-shadow: var(--glass-shadow);
+	}
+	.glass-strong {
+		background: var(--glass-bg-strong);
+		backdrop-filter: blur(var(--blur-glass-lg)) saturate(var(--glass-saturate));
+		-webkit-backdrop-filter: blur(var(--blur-glass-lg)) saturate(var(--glass-saturate));
+		border: 1px solid var(--glass-border);
+		box-shadow: var(--glass-shadow-lg);
+	}
+	.glass-subtle {
+		background: var(--glass-bg-subtle);
+		backdrop-filter: blur(var(--blur-glass-sm)) saturate(140%);
+		-webkit-backdrop-filter: blur(var(--blur-glass-sm)) saturate(140%);
+		border: 1px solid var(--glass-border);
+	}
+	/* Near-opaque tier for chrome that floats over text. */
+	.glass-dense {
+		background: var(--glass-bg-dense);
+		backdrop-filter: blur(var(--blur-glass-lg)) saturate(var(--glass-saturate));
+		-webkit-backdrop-filter: blur(var(--blur-glass-lg)) saturate(var(--glass-saturate));
+		border: 1px solid var(--glass-border);
+		box-shadow: var(--glass-shadow-lg);
+	}
+
+	/* Consistent interaction language: controls lift 1px on hover and
+	   compress on press. transform-only, one easing, one duration. */
+	.lift {
+		transition:
+			transform var(--duration-hover) var(--ease-glass),
+			background var(--duration-hover) var(--ease-glass),
+			border-color var(--duration-hover) var(--ease-glass),
+			box-shadow var(--duration-hover) var(--ease-glass);
+	}
+	.lift:hover {
+		transform: translateY(var(--lift-control));
+	}
+	.lift:active {
+		transform: scale(var(--press-scale));
+	}
+
+	/* Header anchor links — hover state in CSS, not JS. */
+	.nav-link {
+		font: var(--text-caption);
+		color: var(--muted-foreground);
+		padding: 8px 12px;
+		border-radius: var(--radius-md);
+		transition:
+			color var(--duration-fast) var(--ease-glass),
+			background var(--duration-fast) var(--ease-glass);
+	}
+	.nav-link:hover {
+		color: var(--foreground);
+		background: var(--glass-bg-subtle);
+	}
+
+	/* Sheen sweep — one diagonal highlight crossing on hover. */
+	.glass-sheen {
+		position: relative;
+		overflow: hidden;
+	}
+	.glass-sheen::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background: linear-gradient(105deg, transparent 35%, var(--glass-sheen) 48%, transparent 62%);
+		transform: translateX(-130%);
+		transition: transform var(--duration-sheen) var(--ease-glass);
+	}
+	.glass-sheen:hover::after {
+		transform: translateX(130%);
+	}
+}
+
+/* Floating shadcn overlays pick up the glass treatment. */
+[data-slot="dialog-content"],
+[data-slot="alert-dialog-content"],
+[data-slot="sheet-content"] {
+	background: var(--glass-bg-strong);
+	backdrop-filter: blur(26px) saturate(var(--glass-saturate));
+	-webkit-backdrop-filter: blur(26px) saturate(var(--glass-saturate));
+	border-color: var(--glass-border);
+	box-shadow: var(--glass-shadow-lg);
+}
+[data-slot="dropdown-menu-content"],
+[data-slot="select-content"] {
+	backdrop-filter: blur(16px) saturate(var(--glass-saturate));
+	-webkit-backdrop-filter: blur(16px) saturate(var(--glass-saturate));
+}
+
+/* ============================================================
+   Scrollbars — quiet, rounded, theme-aware. The thumb is inset
+   inside a transparent gutter (border + background-clip), so it
+   reads as a floating pill rather than a boxed bar, and it only
+   darkens when you reach for it.
+   ============================================================ */
+:root {
+	--scrollbar-thumb: color-mix(in oklab, var(--foreground) 22%, transparent);
+	--scrollbar-thumb-hover: color-mix(in oklab, var(--foreground) 38%, transparent);
+}
+
+/* Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+/* WebKit / Chromium */
+::-webkit-scrollbar {
+	width: 12px;
+	height: 12px;
+}
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+::-webkit-scrollbar-thumb {
+	background: var(--scrollbar-thumb);
+	border: 4px solid transparent;
+	background-clip: padding-box;
+	border-radius: var(--radius-full);
+	min-height: 40px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background-color: var(--scrollbar-thumb-hover);
+	background-clip: padding-box;
+}
+::-webkit-scrollbar-corner {
+	background: transparent;
+}
+
+/* Inner panes (kanban columns, embeds) get a slimmer bar. */
+.kanban-grid ::-webkit-scrollbar,
+.kanban-grid::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+.kanban-grid ::-webkit-scrollbar-thumb,
+.kanban-grid::-webkit-scrollbar-thumb {
+	border-width: 3px;
+	min-height: 28px;
+}
+
+/* Painted backdrop washes — mounted once by the Backdrop component. */
+@keyframes backdrop-drift {
+	0% { transform: translate3d(0, 0, 0) scale(1); }
+	33% { transform: translate3d(4%, -3%, 0) scale(1.08); }
+	66% { transform: translate3d(-3%, 4%, 0) scale(0.96); }
+	100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0.001ms !important;
+		transition-duration: 0.001ms !important;
+	}
+	.glass-sheen::after { display: none; }
+}
+
+/* ============================================================
+   Responsive rules for the landing sections.
+   ============================================================ */
+@media (max-width: 1024px) {
+	.hero-grid { grid-template-columns: 1fr !important; min-height: auto !important; }
+
+	/* Story: on one column the sticky stat panel would only duplicate the
+	   steps below it — drop it, give steps their natural height, and keep
+	   every step fully legible (the dimming needs the side panel to read). */
+	.story-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+	.story-sticky { display: none !important; }
+	.story-step {
+		min-height: auto !important;
+		padding: 26px 0 !important;
+		opacity: 1 !important;
+	}
+
+	.bento-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+	.projects-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+}
+@media (max-width: 760px) {
+	.bento-grid > *, .projects-grid > * { grid-column: span 4 !important; grid-row: auto !important; }
+	.bento-grid, .projects-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+
+	/* Header: brand + theme toggle on the first row, nav on its own
+	   full-width row that scrolls horizontally instead of wrapping. */
+	.header-row { padding: 8px 14px !important; row-gap: 2px !important; }
+	.site-nav {
+		order: 3;
+		width: 100%;
+		flex-wrap: nowrap;
+		justify-content: flex-start;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+	}
+	.site-nav::-webkit-scrollbar { display: none; }
+	.site-nav a { padding: 7px 10px !important; white-space: nowrap; }
+
+	/* Hero: tidy 2×2 feature switcher, shorter panel, comfortable title. */
+	.hero-grid { padding-top: 24px !important; gap: 24px !important; }
+	.hero-title { font-size: 30px !important; min-height: 0 !important; }
+	.feature-chips {
+		display: grid !important;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+	.feature-chips > button {
+		width: 100%;
+		justify-content: center;
+		padding: 0 10px !important;
+	}
+	.demo-panel { padding: 12px !important; min-height: 400px !important; }
+	.demo-stage { min-height: 320px !important; }
+
+	/* Kanban: columns keep a usable width and snap-scroll sideways. */
+	.kanban-grid {
+		grid-template-columns: none !important;
+		grid-auto-flow: column;
+		grid-auto-columns: 232px;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		-webkit-overflow-scrolling: touch;
+	}
+	.kanban-grid > * { scroll-snap-align: start; }
+
+	.toast-stack { right: 12px !important; top: 12px !important; width: calc(100vw - 24px) !important; }
+	.toast-stack > div { width: 100% !important; right: 0 !important; }
+	.toast-stack > div > div { width: 100% !important; }
+}
+@media (max-width: 560px) {
+	.bento-grid, .projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+	.bento-grid > *, .projects-grid > * { grid-column: span 2 !important; }
+	.hero-title { font-size: 27px !important; }
+}

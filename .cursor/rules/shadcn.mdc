@@ -1,0 +1,41 @@
+---
+description: shadcn/ui and Tailwind v4 conventions for this project
+globs:
+  - "src/**/*.tsx"
+  - "src/index.css"
+  - "components.json"
+alwaysApply: true
+---
+
+# shadcn/ui + Tailwind v4 rules
+
+## Adding components
+
+- Add primitives with the CLI, never by hand:
+  ```bash
+  pnpm dlx shadcn@latest add <component>
+  ```
+- Registry style is `radix-nova`, base color `neutral`, CSS variables on.
+  This is pinned in `components.json` — do not change it.
+- Generated primitives live in `src/components/ui/` and are imported as
+  `@/components/ui/*`.
+
+## Where components go
+
+- `components/ui/*` — generated primitives. Do NOT edit these to restyle the app.
+- `shared/ui/*` — project-wide compositions of primitives.
+- `pages/*/ui/*` — compositions used by a single page.
+
+## Styling
+
+- Tailwind v4 is CSS-first: theme, tokens, and utilities live in `src/index.css`
+  via `@theme` / `@layer`. There is no `tailwind.config.js`.
+- Colors are OKLCH. Use semantic tokens (`bg-primary`, `text-muted-foreground`,
+  `border-border`) — never raw hex.
+- Theme through the `:root` / `.dark` variables in `index.css`. `--accent-hue`
+  drives every accent; `--neutral-hue` drives paper surfaces and ink.
+- Glass surfaces: `.glass-subtle`, `.glass`, `.glass-strong`. Never stack more
+  than two glass layers.
+- Merge class names with `cn()` from `@/lib/utils`.
+- Brand icons (GitHub, X, LinkedIn) come from `@/shared/ui/brandIcons` —
+  `lucide-react` v1 dropped brand marks. All other icons come from `lucide-react`.

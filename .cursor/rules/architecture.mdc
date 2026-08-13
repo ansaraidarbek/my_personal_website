@@ -1,0 +1,48 @@
+---
+description: Feature-Sliced Design layering and import rules for this project
+globs:
+  - "src/**/*.ts"
+  - "src/**/*.tsx"
+alwaysApply: true
+---
+
+# Feature-Sliced Design rules
+
+This project is organised with a pragmatic subset of Feature-Sliced Design.
+Structure code by **layer**, and obey the one-directional import rule.
+
+## Layers (top = most app-specific, bottom = most generic)
+
+- `src/app/` — providers, router, global layout, entry point.
+- `src/pages/` — one slice per route.
+- `src/shared/` — reusable, feature-agnostic code (`ui`, `config`, `data`, `hooks`, `types`, `lib`, `queries`).
+- `src/components/ui/` — shadcn primitives (treat as part of shared).
+- `src/lib/` — the `cn` helper (`@/lib/utils`).
+
+## The import rule (non-negotiable)
+
+Dependencies point **downward only**:
+
+```
+app → pages → shared → components/ui → lib
+```
+
+- A page MUST NOT import from another page.
+- `shared` MUST NOT import from `pages` or `app`.
+- If something is used by two or more pages, it belongs in `shared`, not in a page.
+
+## Page slices
+
+Each page is a folder `pages/<name>/` containing:
+
+- `<name>Page.tsx` — the exported route component (PascalCase component, camelCase file).
+- `ui/` — presentational pieces used only by this page.
+- Optional `model/`, `hooks/`, `store/`, `utils/` for page-local logic.
+
+## Conventions
+
+- Import anything under `src` via the `@/` alias.
+- File names are `camelCase`; exported components are `PascalCase`.
+- Prefer named exports and arrow-function components.
+- Indent with tabs (except shadcn-generated files, which keep 2 spaces).
+- `pnpm build` must pass before a change is done.
